@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Page</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/logo1.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Pacifico|Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #ebffcf;
+        font-family: "Roboto", sans-serif;
+      }
+        .container{
+            width: 50%;
+        }
+        /* Media query for screens smaller than 768px */
+        @media (max-width: 768px) {
+            .container{
+            width: 100%;
+            padding: 0% 8%;
+            }   
+        }
+      .card {
+        border: none;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
+      .card-title {
+        font-family: "Pacifico", cursive;
+        color: #72a427;
+      }
+      .btn-success {
+            font-family: 'Pacifico', cursive;
+            font-size: 150%;
+        background-color: #72a427;
+        border: none;
+            transition: transform 0.2s; /* Smooth transition effect */
+      }
+      .btn-success:hover {
+        background-color: #84a74f;
+            transform: scale(1.05); /* Scale up by 5% on hover */
+        }
+        .form-control {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adding shadow to all form controls */
+            transition: transform 0.2s; /* Smooth transition effect */
+        }
+        /* Enlarge on hover */
+        .form-control:hover {
+            transform: scale(1.05); /* Scale up by 5% on hover */
+        }
+        /* Style for the required asterisk */
+        .required {
+            color: red;
+            margin-left: 5px; /* Add some spacing between the label and the asterisk */
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card mt-5">
+        <div class="card-body">
+          <h2 class="card-title text-center">Login to your account</h2>
+          <form action="/submit_login" method="post" class="mt-4">
+            <div class="form-group">
+              <label for="email">Username / Email / Phone Number<span class="required">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password<span class="required">*</span></label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-success btn-block" id="login-button">
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Refresh the page function
+      function refreshPage() {
+        location.reload(); 
+      }
+
+      // Function to fetch users from the API
+      async function fetchUsers() {
+          try {
+              const response = await fetch('http://localhost:3030/users');
+              const users = await response.json();
+              return users;
+          } catch (error) {
+              console.error('Error fetching users:', error);
+              return [];
+          }
+      }
+
+      // Function to handle login
+      async function handleLogin() {
+          const emailInput = document.getElementById('email');
+          const passwordInput = document.getElementById('password');
+          
+          const email = emailInput.value;
+          const password = passwordInput.value;
+
+          // Fetch users from the API
+          const users = await fetchUsers();
+
+          // Check if the provided email and password match any user
+          const user = users.find(user => user.email === email && user.password === password);
+
+          if (user) {
+              alert('Login successful!');
+              refreshPage();
+              // You can redirect or perform other actions here
+          } else {
+              alert('Login failed. Invalid credentials.');
+              refreshPage();
+          }
+      }
+
+      // Attach a click event listener to the login button
+      const loginButton = document.getElementById('login-button');
+      loginButton.addEventListener('click', handleLogin);
+  </script>
+  </body>
+</html>
